@@ -24,15 +24,17 @@ class TodoDetails extends Component {
         if (!this.state.todo){
             return <p>Loading ....</p>
         }
-
-        const {name, description, _id} = this.state.todo
+  
+        const {name, description, _id, image} = this.state.todo
 
         return (
             <div>
                 <p>{name}</p>
                 <p>{description}</p>
+                {/*<img src={image} /> */}
                 <Link to={`/todo/${_id}/edit`} ><button>Edit</button></Link>
                 <button onClick={() => this.props.onDelete(_id)}>Delete</button>
+                
             </div>
         )
     }
