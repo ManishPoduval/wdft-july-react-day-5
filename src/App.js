@@ -88,6 +88,14 @@ class App extends React.Component {
         })
     })
   }
+  
+   handleSignIn = (e) => {
+    //sign in request here
+  }
+
+  handleSignUp = (e) => {
+    //sign up request here
+  }
 
   render() {
     return (
@@ -105,6 +113,12 @@ class App extends React.Component {
           }}/>
           <Route path="/todo/:id/edit" render={(routeProps) => {
             return <EditForm onEdit={this.handleEdit} {...routeProps}/>
+          }}/>
+          <Route path="/sign-in" render={(routeProps) => {
+            return <SignIn onSignIn={this.handleSignIn} {...routeProps} />
+          }}/>
+          <Route path="/sign-up" render={(routeProps) => {
+            return <SignUp onSignUp={this.handleSignUp} {...routeProps} />
           }}/>
         </Switch>
       </div>
