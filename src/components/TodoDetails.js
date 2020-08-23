@@ -31,7 +31,7 @@ class TodoDetails extends Component {
             <div>
                 <p>{name}</p>
                 <p>{description}</p>
-                {/*<img src={image} /> */}
+                {/*<img style={{width: '200px', height: '200px'}} src={image} /> */}
                 <Link to={`/todo/${_id}/edit`} ><button>Edit</button></Link>
                 <button onClick={() => this.props.onDelete(_id)}>Delete</button>
                 
