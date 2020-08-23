@@ -91,6 +91,10 @@ class App extends React.Component {
     })
   }
   
+  handleLogOut = (e) => {
+    //Logout request here
+  }
+  
    handleSignIn = (e) => {
     //sign in request here
   }
