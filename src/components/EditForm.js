@@ -11,7 +11,7 @@ export default class EditForm extends Component {
 
     componentDidMount() {
         let id = this.props.match.params.id
-        axios.get(`${API_URL}/todos/${id}`)
+        axios.get(`${API_URL}/todos/${id}`, {withCredentials: true})
             .then((res) => {
                 this.setState({
                     todo: res.data

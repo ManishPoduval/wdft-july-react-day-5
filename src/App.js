@@ -14,7 +14,8 @@ import {Switch, Route, withRouter} from 'react-router-dom'
 class App extends React.Component {
 
   state = {
-    todos: []
+    todos: [], 
+    loggedInUser: null,
   }
 
   componentDidMount(){
@@ -24,35 +25,50 @@ class App extends React.Component {
             todos: res.data
           })
       })
+    if (!this.state.loggedInUser){
+      axios.get(`${API_URL}/user`, {withCredentials: true})
+      .then((res) => {
+          this.setState({
+            loggedInUser: res.data
+          })
+      })
+    }  
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const {name, description} = e.currentTarget
+    const {name, description, image} = e.currentTarget
+    console.log(image.files[0])
 
-    axios.post(`${API_URL}/create`, {
-      name: name.value,
-      description: description.value, 
-      completed: false
-    })
-    .then((res) => {
-      //redirect
-      let newTodo = res.data
-      let cloneTodos = JSON.parse(JSON.stringify(this.state.todos))
-      cloneTodos.unshift(newTodo)
-      this.setState({
-        todos: cloneTodos
-      }, () => {
-        this.props.history.push('/')
+    let uploadData = new FormData()
+    uploadData.append('imageUrl', image.files[0])
+
+    axios.post(`${API_URL}/upload`, uploadData)
+      .then((response) => {
+        axios.post(`${API_URL}/create`, {
+          name: name.value,
+          description: description.value, 
+          completed: false,
+          image: response.data.image
+        })
+        .then((res) => {
+          //redirect
+          let newTodo = res.data
+          let cloneTodos = JSON.parse(JSON.stringify(this.state.todos))
+          cloneTodos.unshift(newTodo)
+          this.setState({
+            todos: cloneTodos
+          }, () => {
+            this.props.history.push('/')
+          })
+          
+        })
       })
-      
-    })
-
   }
   
 
   handleDelete = (id) => {
-    axios.delete(`${API_URL}/todos/${id}`)
+    axios.delete(`${API_URL}/todos/${id}`, {withCredentials: true})
       .then(() => {
           
         let filteredTodos = this.state.todos.filter((todo) => {
@@ -73,7 +89,7 @@ class App extends React.Component {
       name: updatedTodo.name,
       description: updatedTodo.description, 
       completed: updatedTodo.completed
-    })
+    },  {withCredentials: true})
     .then(() => {
         //Use a map to always return a new array. ForEach does not
         // Please note that down. 
@@ -92,21 +108,57 @@ class App extends React.Component {
   }
   
   handleLogOut = (e) => {
-    //Logout request here
+    axios.post(`${API_URL}/logout`, {}, {withCredentials: true})
+      .then(() => {
+        this.setState({
+          loggedInUser: null
+        }, ()=>{
+          this.props.history.push('/')
+        })
+      })
   }
   
-   handleSignIn = (e) => {
-    //sign in request here
+  handleSignIn = (e) => {
+    e.preventDefault();
+    const {email, password} = e.currentTarget;
+  
+    axios.post(`${API_URL}/signin`, {
+      email: email.value, 
+      password: password.value
+    },{withCredentials: true})
+      .then((res) => {
+        console.log(res)
+        this.setState({
+          loggedInUser: res.data
+        }, () => {
+          this.props.history.push('/')
+        })
+      })  
   }
 
   handleSignUp = (e) => {
-    //sign up request here
+    e.preventDefault();
+    const {username, email, password} = e.currentTarget;
+  
+    axios.post(`${API_URL}/signup`, {
+      username: username.value,
+      email: email.value, 
+      password: password.value
+    },  {withCredentials: true})
+      .then((res) => {
+        console.log(res)
+        this.setState({
+          loggedInUser: res.data
+        } ,() => {
+          this.props.history.push('/')
+        })
+      })  
   }
 
   render() {
     return (
       <div>
-        <Nav />
+        <Nav loggedInUser={this.state.loggedInUser} onLogout={this.handleLogOut} />
         <Switch >
           <Route exact path="/" render={() => {
             return <TodoList todos={this.state.todos}/>
@@ -115,7 +167,7 @@ class App extends React.Component {
             return <AddForm  onSubmit={this.handleSubmit} {...routeProps}/>
           }} />
           <Route exact path="/todo/:id" render={(routeProps) => {
-            return <TodoDetails onDelete={this.handleDelete} {...routeProps}/>
+            return <TodoDetails loggedInUser={this.state.loggedInUser} onDelete={this.handleDelete} {...routeProps}/>
           }}/>
           <Route path="/todo/:id/edit" render={(routeProps) => {
             return <EditForm onEdit={this.handleEdit} {...routeProps}/>
