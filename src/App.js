@@ -50,7 +50,7 @@ class App extends React.Component {
           description: description.value, 
           completed: false,
           image: response.data.image
-        })
+        }, {withCredentials: true})
         .then((res) => {
           //redirect
           let newTodo = res.data
