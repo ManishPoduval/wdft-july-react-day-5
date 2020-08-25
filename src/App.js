@@ -72,7 +72,7 @@ class App extends React.Component {
       .then(() => {
           
         let filteredTodos = this.state.todos.filter((todo) => {
-          return todo._id != id
+          return todo._id !== id
         })
 
         this.setState({
@@ -94,7 +94,7 @@ class App extends React.Component {
         //Use a map to always return a new array. ForEach does not
         // Please note that down. 
         let cloneTodos = this.state.todos.map((todo) => {
-            if (todo._id == updatedTodo._id) {
+            if (todo._id === updatedTodo._id) {
               todo = updatedTodo 
             }
             return todo

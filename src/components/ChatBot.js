@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 class KommunicateChat extends Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount(){
     (function(d, m){
       var kommunicateSettings = {"appId":"11ce63b6e1c526e192744df8a2c69922b","popupWidget":true,"automaticChatOpenOnNavigation":true};

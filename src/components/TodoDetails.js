@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import {API_URL} from '../config'
 import {Link} from 'react-router-dom'
-import MyMap from './MyMap'
-import ChatBot from './ChatBot'
+// import MyMap from './MyMap'
+// import ChatBot from './ChatBot'
 // import { loadStripe } from "@stripe/stripe-js";
 // import { Elements } from "@stripe/react-stripe-js";
 // import CheckoutForm from "./CheckoutForm";
@@ -50,7 +50,7 @@ class TodoDetails extends Component {
                     <CheckoutForm />
                 </Elements> */}
                 <p>{description}</p>
-            {image && <img style={{width: '200px', height: '200px'}} src={image} /> }
+            {image && <img style={{width: '200px', height: '200px'}} src={image} alt={name}/> }
                 <Link to={`/todo/${_id}/edit`} ><button>Edit</button></Link>
                 <button onClick={() => this.props.onDelete(_id)}>Delete</button>
                 
